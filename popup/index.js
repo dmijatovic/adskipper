@@ -37,6 +37,10 @@ function setONStatus(){
     // tabid
     text:"ON"
   })
+  // v2
+  // chrome.pageActions.setBadgeText({
+  //   text: "ON"
+  // })
 }
 
 function setOFFStatus(){
@@ -44,6 +48,10 @@ function setOFFStatus(){
     // tabid
     text:"OFF"
   })
+  // v2
+  // chrome.pageActions.setBadgeText({
+  //   text: "OFF"
+  // })
 }
 
 function askForStats(){

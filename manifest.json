@@ -2,12 +2,10 @@
   "name":"Youtube Ad skipper",
   "version":"0.5",
   "description":"It montiors youtube for 'Skip Ad' button and use the button to skip ads.",
-  "permissions":["activeTab"],
   "content_scripts":[{
     "matches":["https://www.youtube.com/*"],
     "js":["adSkipper.js"]
   }],
-  "host_permissions": ["https://www.youtube.com/*"],
   "action":{
     "default_title":"Youtube Ad skipper",
     "default_popup":"popup/index.html",
@@ -15,6 +13,9 @@
       "128":"adSkipper.png"
     }
   },
+  "host_permissions": [
+    "https://www.youtube.com/"
+  ],
   "icons":{
     "128":"adSkipper.png"
   },
