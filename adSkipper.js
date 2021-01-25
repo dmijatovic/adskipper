@@ -98,7 +98,6 @@ chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
         payload:`Message type ${message.type} UNKNOWN!`
       })
   }
-
 })
 
 startMonitoring()

@@ -37,7 +37,6 @@ function setONStatus(){
     // tabid
     text:"ON"
   })
-  chrome.action.enable()
 }
 
 function setOFFStatus(){
@@ -45,7 +44,6 @@ function setOFFStatus(){
     // tabid
     text:"OFF"
   })
-  chrome.action.disable()
 }
 
 function askForStats(){
