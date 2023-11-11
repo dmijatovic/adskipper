@@ -21,6 +21,8 @@ function report(){
 function checkForSkipAdd(){
   const skipBtn = document.querySelector(".ytp-ad-skip-button")
   if (skipBtn) return skipBtn
+  const skipBtnModern = document.querySelector(".ytp-ad-skip-button-modern")
+  if (skipBtnModern) return skipBtnModern
   return undefined
 }
 
@@ -57,12 +59,6 @@ function startMonitoring(){
         errorCnt+=1
       }
     }
-    // if (cnt>=reportCycle){
-    //   //message every x times
-    //   report()
-    //   //reset counter
-    //   cnt=0
-    // }
   },checkInterval)
 
   startDateTime = new Date()
