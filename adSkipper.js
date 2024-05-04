@@ -2,63 +2,145 @@
 let cnt = 0,
   skipAdCnt=0,
   overlayAdCnt=0,
-  checkInterval=2000,
+  checkInterval=5000,
   reportCycle=30,
   errorCnt=0,
   startDateTime
 
 function logger(msg){
-  console.log(`[Auto Skip Ad]...${msg}`)
+  console.log(`[adSkipper]...${msg}`)
 }
 
 function report(){
-  console.group(`[Auto Skip Ad] ${skipAdCnt} ${overlayAdCnt}`)
+  console.group(`[adSkipper] ${skipAdCnt} ${overlayAdCnt}`)
   console.log(`Skip add btn clicked: ${skipAdCnt}`)
   console.log(`Add overlay close btn clicked: ${overlayAdCnt}`)
   console.groupEnd()
 }
 
+/**
+ * Not used just a reference to movie_player id
+ */
+function getMoviePlayer(){
+  const mp = document.getElementById("movie_player")
+  if (mp){
+    console.log("movie_player", mp)
+  }
+}
+
+/**
+ * Using two classes to determine if add is created and playing.
+ * If ad is created but not playing we remove ad-created class in attempt to block ads?!?
+ * 2024-05-02 back to using only .ad-showing class
+ * @returns
+ */
+function isAdPlaying(){
+  // const ad = document.querySelector(".ad-created")
+  // if (ad){
+  //   logger("Ad created")
+  // }
+  const mp = document.querySelector(".ad-showing")
+  if (mp){
+    logger("Ad playing")
+    return true
+  }
+  // if (ad){
+  //   // remove class
+  //   ad.classList.toggle("ad-created")
+  //   logger("Ad created class removed")
+  // }
+  return false
+}
+
+function isActionable(el) {
+  // disabled element
+  if (el.disabled === true){
+    logger("isActionable...disabled")
+    return false
+  }
+  if (el.hidden === true){
+    logger("isActionable...hidden")
+    return false
+  }
+  // 0 size
+  if (el.clientHeight > 0 && el.clientWidth >0 ) {
+    logger("isActionable...TRUE")
+    return true
+  }
+  // ELSE
+  logger("isActionable...FALSE")
+  return false
+}
+
 function checkForSkipAdd(){
-  const skipBtn = document.querySelector(".ytp-ad-skip-button")
-  if (skipBtn) return skipBtn
-  const skipBtnModern = document.querySelector(".ytp-ad-skip-button-modern")
-  if (skipBtnModern) return skipBtnModern
+  const skipBtn = document.querySelector("button.ytp-skip-ad-button")
+  if (skipBtn && isActionable(skipBtn)===true) return skipBtn
+  const skipBtnModern = document.querySelector("button.ytp-ad-skip-button-modern")
+  if (skipBtnModern && isActionable(skipBtnModern)===true) return skipBtnModern
   return undefined
+}
+
+function useSkipButton(btn){
+  try{
+    btn.onclick = (e) =>{
+      e.isTrusted=true
+      e.detail=1
+      e.pointerId=1
+      e.pointerType="mouse"
+      console.log("SkipAdd button clicked", e)
+      // debugger
+      skipAdCnt+=1
+    }
+    btn.click()
+  }catch(e){
+    logger(`FAILED to click on skipBtn. Error: ${e.message}`)
+    errorCnt+=1
+  }
 }
 
 function checkForOverlayAdCloseBtn(){
   const closeBtn = document.querySelector(".ytp-ad-overlay-close-button")
-  if (closeBtn) return closeBtn
+  if (closeBtn && isActionable(closeBtn)) return closeBtn
   return undefined
+}
+
+function closeOverlayAdd(btn){
+  try{
+    btn.onclick = (e) =>{
+      e.isTrusted=true
+      e.detail=1
+      e.pointerId=1
+      e.pointerType="mouse"
+      console.log("Overlay add button clicked", e)
+      // debugger
+      overlayAdCnt+=1
+    }
+    btn.click()
+  }catch(e){
+    logger(`FAILED to click on closeAdBtn. Error: ${e.message}`)
+    errorCnt+=1
+  }
 }
 
 function startMonitoring(){
   const loper = setInterval(()=>{
     cnt+=1
-    const skipBtn = checkForSkipAdd()
-    if (skipBtn){
-      logger("Skip Ad button found")
-      try{
-        skipBtn.click()
-        logger("Skip Ad button CLICKED")
-        skipAdCnt+=1
-      }catch(e){
-        logger(`FAILED to click on skipBtn. Error: ${e.message}`)
-        errorCnt+=1
+
+    // window.google_ad_status=null
+    // logger(`window.google_ad_status=${window.google_ad_status}`)
+
+    if (isAdPlaying()===true){
+      const skipBtn = checkForSkipAdd()
+      if (skipBtn){
+        useSkipButton(skipBtn)
       }
     }
+
     const closeAdBtn = checkForOverlayAdCloseBtn()
     if (closeAdBtn){
-      logger("Overlay Ad button found")
-      try{
-        closeAdBtn.click()
-        logger("Overlay Ad close button CLICKED")
-        overlayAdCnt+=1
-      }catch(e){
-        logger(`FAILED to click on closeAdBtn. Error: ${e.message}`)
-        errorCnt+=1
-      }
+      closeOverlayAdd()
     }
+
   },checkInterval)
 
   startDateTime = new Date()
@@ -70,7 +152,6 @@ function getTimeDiffFromNow(start){
   const diff = end - start
   return diff
 }
-
 
 chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
   logger(`Message received: ${JSON.stringify(message)}`)
