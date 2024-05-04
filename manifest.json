@@ -1,6 +1,6 @@
 {
   "name":"Youtube Ad skipper",
-  "version":"1.0.2",
+  "version":"1.0.3",
   "description":"It montiors youtube for 'Skip Ad' button and use the button to skip ads.",
   "content_scripts":[{
     "matches":["https://www.youtube.com/*"],

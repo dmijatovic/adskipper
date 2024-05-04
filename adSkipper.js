@@ -7,8 +7,12 @@ let cnt = 0,
   errorCnt=0,
   startDateTime
 
-function logger(msg){
-  console.log(`[adSkipper]...${msg}`)
+function logger(msg,el){
+  if (el){
+    console.log(`[adSkipper]...${msg}`,el)
+  }else{
+    console.log(`[adSkipper]...${msg}`)
+  }
 }
 
 function report(){
@@ -24,7 +28,7 @@ function report(){
 function getMoviePlayer(){
   const mp = document.getElementById("movie_player")
   if (mp){
-    console.log("movie_player", mp)
+    logger("movie_player", mp)
   }
 }
 
@@ -37,7 +41,7 @@ function getMoviePlayer(){
 function isAdPlaying(){
   const mp = document.querySelector(".ad-showing")
   if (mp){
-    logger("[adSkipper]...ad playing")
+    logger("ad playing")
     return true
   }
   // const ad = document.querySelector(".ad-created")
@@ -55,21 +59,21 @@ function isAdPlaying(){
 function isActionable(el) {
   // disabled element
   if (el.disabled === true){
-    logger("[adSkipper]...isActionable...disabled")
+    logger("isActionable...disabled")
     return false
   }
   // hidden element
   if (el.hidden === true){
-    logger("[adSkipper]...isActionable...hidden")
+    logger("isActionable...hidden")
     return false
   }
   // client size ~ visible
   if (el.clientHeight > 0 && el.clientWidth >0 ) {
-    logger("[adSkipper]...isActionable...TRUE")
+    logger("isActionable...TRUE")
     return true
   }
   // ELSE
-  logger("[adSkipper]...isActionable...FALSE")
+  logger("isActionable...FALSE")
   return false
 }
 
@@ -89,13 +93,13 @@ function useSkipButton(btn){
       // e.detail=1
       // e.pointerId=1
       // e.pointerType="mouse"
-      console.log("[adSkipper]...SkipAdd...clicked", e)
+      logger("SkipAdd...clicked", e)
       // debugger
       skipAdCnt+=1
     }
     btn.click()
   }catch(e){
-    logger(`[adSkipper]...useSkipButton...ERROR: ${e.message}`)
+    logger(`useSkipButton...ERROR: ${e.message}`)
     errorCnt+=1
   }
 }
@@ -114,13 +118,13 @@ function closeOverlayAdd(btn){
       // e.detail=1
       // e.pointerId=1
       // e.pointerType="mouse"
-      console.log("[adSkipper]...closeOverlayAdd button clicked", e)
+      logger("closeOverlayAdd clicked", e)
       // debugger
       overlayAdCnt+=1
     }
     btn.click()
   }catch(e){
-    logger(`[adSkipper]...closeOverlayAdd...ERROR: ${e.message}`)
+    logger(`closeOverlayAdd...ERROR: ${e.message}`)
     errorCnt+=1
   }
 }
