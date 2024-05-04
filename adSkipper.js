@@ -37,7 +37,7 @@ function getMoviePlayer(){
 function isAdPlaying(){
   const mp = document.querySelector(".ad-showing")
   if (mp){
-    logger("Ad playing")
+    logger("[adSkipper]...ad playing")
     return true
   }
   // const ad = document.querySelector(".ad-created")
@@ -55,20 +55,21 @@ function isAdPlaying(){
 function isActionable(el) {
   // disabled element
   if (el.disabled === true){
-    logger("isActionable...disabled")
+    logger("[adSkipper]...isActionable...disabled")
     return false
   }
+  // hidden element
   if (el.hidden === true){
-    logger("isActionable...hidden")
+    logger("[adSkipper]...isActionable...hidden")
     return false
   }
-  // 0 size
+  // client size ~ visible
   if (el.clientHeight > 0 && el.clientWidth >0 ) {
-    logger("isActionable...TRUE")
+    logger("[adSkipper]...isActionable...TRUE")
     return true
   }
   // ELSE
-  logger("isActionable...FALSE")
+  logger("[adSkipper]...isActionable...FALSE")
   return false
 }
 
@@ -88,13 +89,13 @@ function useSkipButton(btn){
       // e.detail=1
       // e.pointerId=1
       // e.pointerType="mouse"
-      console.log("SkipAdd button clicked", e)
+      console.log("[adSkipper]...SkipAdd...clicked", e)
       // debugger
       skipAdCnt+=1
     }
     btn.click()
   }catch(e){
-    logger(`useSkipButton...ERROR: ${e.message}`)
+    logger(`[adSkipper]...useSkipButton...ERROR: ${e.message}`)
     errorCnt+=1
   }
 }
@@ -113,13 +114,13 @@ function closeOverlayAdd(btn){
       // e.detail=1
       // e.pointerId=1
       // e.pointerType="mouse"
-      console.log("Overlay add button clicked", e)
+      console.log("[adSkipper]...closeOverlayAdd button clicked", e)
       // debugger
       overlayAdCnt+=1
     }
     btn.click()
   }catch(e){
-    logger(`closeOverlayAdd...ERROR: ${e.message}`)
+    logger(`[adSkipper]...closeOverlayAdd...ERROR: ${e.message}`)
     errorCnt+=1
   }
 }
